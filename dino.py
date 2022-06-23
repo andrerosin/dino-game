@@ -4,12 +4,27 @@ from sys import exit
 import os
 from random import randrange, choice
 
+os.system("cls")
+
+jogador = input("Insira seu nome: ")
+email = input("Insira seu email: ")
+
+historico = ["\n\nNome do jogador: ", jogador,"\nemail: ", email]
+
+with open("historico.txt","a") as arquivo:
+    for valor in historico:
+        arquivo.write(str(valor)) 
+
 pygame.init()
 pygame.mixer.init()
 
 diretorio_principal = os.path.dirname(__file__)
 diretorio_imagens = os.path.join(diretorio_principal, "imagens")
 diretorio_sons = os.path.join(diretorio_principal, "sons")
+
+musica_De_fundo = pygame.mixer.music.load("sons/trilha.mp3")
+pygame.mixer.music.set_volume(1)
+pygame.mixer.music.play(-1)
 
 largura = 640
 altura = 480
@@ -43,7 +58,7 @@ def exibe_mensagem(msg, tamanho, cor):
     return texto_formatado
 
 def reiniciar_jogo():
-    global pontos, velocidade_jogo, colidiu, escolha_obstaculo
+    global pontos, velocidade_jogo, colidiu, escolha_obstaculo, musica_De_fundo
     pontos = 0
     velocidade_jogo = 10
     colidiu = False
@@ -52,6 +67,9 @@ def reiniciar_jogo():
     dino_voador.rect.x = largura
     cacto.rect.x = largura
     escolha_obstaculo = choice([0, 1])
+    musica_De_fundo = pygame.mixer.music.load("sons/trilha.mp3")
+    pygame.mixer.music.set_volume(1)
+    pygame.mixer.music.play(-1)
 
 class Dino(pygame.sprite.Sprite):
     def __init__(self):
@@ -221,6 +239,7 @@ while True:
         dino_voador.escolha = escolha_obstaculo
     
     if colisoes and colidiu == False:
+        pygame.mixer.music.set_volume(0)
         som_colisao.play()
         colidiu = True
 
